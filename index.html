@@ -23,9 +23,47 @@
 
         h2 { color: #2c3e50; margin-bottom: 20px; text-align: center; }
 
-        .search-container { width: 100%; max-width: 900px; margin-bottom: 15px; display: flex; justify-content: center; }
-        #schoolSearch { width: 100%; max-width: 400px; padding: 12px 20px; font-size: 16px; border: 1px solid #ccc; border-radius: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); font-family: 'Inter', sans-serif; outline: none; transition: border-color 0.3s; }
+        /* UPDATED: Added a gap to separate the search bar and the new reset button */
+        .search-container { 
+            width: 100%; 
+            max-width: 900px; 
+            margin-bottom: 15px; 
+            display: flex; 
+            justify-content: center; 
+            gap: 10px; 
+        }
+        
+        #schoolSearch { 
+            width: 100%; 
+            max-width: 400px; 
+            padding: 12px 20px; 
+            font-size: 16px; 
+            border: 1px solid #ccc; 
+            border-radius: 30px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+            font-family: 'Inter', sans-serif; 
+            outline: none; 
+            transition: border-color 0.3s; 
+        }
         #schoolSearch:focus { border-color: #1a73e8; }
+
+        /* NEW: Styling for the Reset View Button */
+        #resetViewBtn {
+            padding: 12px 18px;
+            font-size: 18px;
+            background-color: #fff;
+            color: #555;
+            border: 1px solid #ccc;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+        }
+        #resetViewBtn:hover {
+            background-color: #f1f3f4;
+            color: #1a73e8;
+            border-color: #1a73e8;
+        }
 
         #schoolMap { height: 550px; width: 100%; max-width: 900px; border: none; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.1); z-index: 1; }
 
@@ -39,25 +77,12 @@
         .popup-programs { font-size: 0.9em; color: #555; margin-bottom: 12px; }
         .badge { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 0.8em; font-weight: 600; color: white; margin-bottom: 8px; }
         
-        /* NEW: Styling to turn our plain link into a nice-looking button */
         .btn-directions {
-            display: inline-block;
-            width: 100%;
-            padding: 8px 0;
-            background-color: #1a73e8;
-            color: white !important; /* Forces the text to stay white */
-            text-decoration: none; /* Removes the underline */
-            border-radius: 6px;
-            font-size: 0.9em;
-            font-weight: 600;
-            text-align: center;
-            transition: background-color 0.2s;
-            box-sizing: border-box;
+            display: inline-block; width: 100%; padding: 8px 0; background-color: #1a73e8; color: white !important; 
+            text-decoration: none; border-radius: 6px; font-size: 0.9em; font-weight: 600; text-align: center; 
+            transition: background-color 0.2s; box-sizing: border-box;
         }
-        
-        .btn-directions:hover {
-            background-color: #1557b0; /* Darkens slightly when hovered over */
-        }
+        .btn-directions:hover { background-color: #1557b0; }
 
         .info.legend { background: white; padding: 10px 14px; font-size: 14px; line-height: 24px; color: #555; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
         .info.legend h4 { margin: 0 0 8px 0; color: #333; font-size: 15px; }
@@ -71,6 +96,7 @@
     <div class="search-container">
         <input type="text" id="schoolSearch" list="school-options" placeholder="Search for a school...">
         <datalist id="school-options"></datalist>
+        <button id="resetViewBtn" title="Reset Map View"><i class="fa-solid fa-arrow-rotate-left"></i></button>
     </div>
 
     <div id="schoolMap"></div>
@@ -78,26 +104,30 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
     <script>
-        var map = L.map('schoolMap').setView([14.6042, 121.0300], 14);
+        // NEW: We define the center point and zoom level as variables so we can reuse them
+        var defaultCenter = [14.6042, 121.0300];
+        var defaultZoom = 14;
+
+        var map = L.map('schoolMap').setView(defaultCenter, defaultZoom);
 
         L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
             maxZoom: 19,
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
 
         var schools = [
-           { id: "136750", name: "Nicanor C. Ibuna Elementary School", lat: 14.60176124, lng: 121.0303504, programs: "K-6 Basic Education", address: "61 J.P. Rizal St. Brgy. Onse, San Juan City" },
-            { id: "136744", name: "Pedro Cruz Elementary School", lat: 14.60551065, lng: 121.0263512, programs: "K-6 Basic Education", address: "114 Lope K. Santos St. Brgy. Pedro Cruz, San Juan City" },
-            { id: "136751", name: "Pinaglabanan Elementary School", lat: 14.60401922, lng: 121.0299103, programs: "K-6 Basic Education, SPED", address: "Pinaglabanan St. Brgy. Corazon de Jesus, San Juan City" },
-            { id: "136747", name: "San Perfecto Elementary School", lat: 14.60304465, lng: 121.0231903, programs: "K-6 Basic Education", address: "San Gabriel cor. Adevoso St. Brgy. San Perfecto, San Juan City" },
-            { id: "136752", name: "Sta. Lucia Elementary School", lat: 14.59785905, lng: 121.0353281, programs: "K-6 Basic Education", address: "7-D Vicencio St. Brgy. Sta. Lucia, San Juan City" },
-            { id: "137077", name: "West Crame Elementary School", lat: 14.60803024, lng: 121.0506251, programs: "K-6 Basic Education", address: "21 1st West Crame Street, Brgy. West Crame, San Juan City" },
-            { id: "502655", name: "Kabayanan Integrated School", lat: 14.59879668, lng: 121.0316739, programs: "K-10 Integrated Basic Ed.", address: "201-I Francisco St. Brgy. Kabayanan, San Juan City" },
-            { id: "502654", name: "Salapan Integrated School", lat: 14.6113472, lng: 121.0244919, programs: "K-10 Integrated Basic Ed.", address: "11-S Veloso St. Brgy. Salapan, San Juan City" },
-            { id: "502653", name: "San Juan City Integrated School", lat: 14.60613459, lng: 121.0228738, programs: "K-10 Integrated Basic Ed.", address: "N. Domingo cor. A. Luna St. Brgy. Balong-Bato, San Juan City" },
-            { id: "305423", name: "San Juan National High School", lat: 14.60558314, lng: 121.0294749, programs: "Junior - Senior High School (Grades 7-12)", address: "P. Narciso St. Brgy. Corazon de Jesus, San Juan City" },
-            { id: "305607", name: "San Juan City Science High School", lat: 14.60369204, lng: 121.0314835, programs: "Science Curriculum (JHS & SHS)", address: "29 Pinaglabanan St. Brgy. St. Joseph, San Juan City" },
-            { id: "305608", name: "San Juan City Academic Senior High School", lat: 14.60699842, lng: 121.0225635, programs: "SHS Academic Tracks", address: "N. Domingo cor. A. Luna St. Brgy. Balong-Bato, San Juan City" },
+            { id: "136750", name: "Nicanor C. Ibuna Elementary School", lat: 14.60176124, lng: 121.0303504, programs: "K-6 Basic Education", address: "61 J.P. Rizal St., San Juan City" },
+            { id: "136744", name: "Pedro Cruz Elementary School", lat: 14.60551065, lng: 121.0263512, programs: "K-6 Basic Education", address: "114 Lope K. Santos St., San Juan City" },
+            { id: "136751", name: "Pinaglabanan Elementary School", lat: 14.60401922, lng: 121.0299103, programs: "K-6 Basic Education, SPED", address: "Pinaglabanan St., San Juan City" },
+            { id: "136747", name: "San Perfecto Elementary School", lat: 14.60304465, lng: 121.0231903, programs: "K-6 Basic Education", address: "San Gabriel cor. Adevoso St., San Juan City" },
+            { id: "136752", name: "Sta. Lucia Elementary School", lat: 14.59785905, lng: 121.0353281, programs: "K-6 Basic Education", address: "7-D Vicencio St., San Juan City" },
+            { id: "137077", name: "West Crame Elementary School", lat: 14.60803024, lng: 121.0506251, programs: "K-6 Basic Education", address: "21 1st West Crame Street, San Juan City" },
+            { id: "502655", name: "Kabayanan Integrated School", lat: 14.59879668, lng: 121.0316739, programs: "K-10 Integrated Basic Ed.", address: "201-I Francisco St., San Juan City" },
+            { id: "502654", name: "Salapan Integrated School", lat: 14.6113472, lng: 121.0244919, programs: "K-10 Integrated Basic Ed.", address: "11-S Veloso St., San Juan City" },
+            { id: "502653", name: "San Juan City Integrated School", lat: 14.60613459, lng: 121.0228738, programs: "K-10 Integrated Basic Ed.", address: "N. Domingo cor. A. Luna St., San Juan City" },
+            { id: "305423", name: "San Juan National High School", lat: 14.60558314, lng: 121.0294749, programs: "Junior High (Grades 7-10)", address: "P. Narciso St., San Juan City" },
+            { id: "305607", name: "San Juan City Science High School", lat: 14.60369204, lng: 121.0314835, programs: "Science Curriculum (JHS & SHS)", address: "29 Pinaglabanan St., San Juan City" },
+            { id: "305608", name: "San Juan City Academic Senior High School", lat: 14.60699842, lng: 121.0225635, programs: "SHS Academic Tracks", address: "N. Domingo cor. A. Luna St., San Juan City" },
             { id: "305607", name: "San Juan City TVL Senior High School", lat: 14.60327769, lng: 121.0293973, programs: "SHS TVL Tracks", address: "Dr. A. Ejercito cor Jose Gil Street Brgy. Tibagan, San Juan City" }
         ];
 
@@ -110,6 +140,7 @@
 
         var datalist = document.getElementById('school-options');
         var searchInput = document.getElementById('schoolSearch');
+        var resetBtn = document.getElementById('resetViewBtn'); // Target the new reset button
 
         schools.forEach(function(school) {
             var schoolColor = getSchoolColor(school.name);
@@ -119,8 +150,7 @@
             
             var marker = L.marker([school.lat, school.lng], { icon: customIcon }).addTo(map);
             
-            // NEW: Appended the "Get Directions" link at the bottom of the popup content.
-            // Notice how it uses school.lat and school.lng to build the specific Google Maps URL.
+            // Fixed the Google Maps URL to the official directions format
             var popupContent = `
                 <div class='badge' style='background-color: ${schoolColor}'>School Info</div>
                 <div class='popup-title'><b>${school.name}</b></div>
@@ -150,6 +180,18 @@
                 searchInput.value = '';
                 searchInput.blur();
             }
+        });
+
+        // NEW: Event listener for the Reset button
+        resetBtn.addEventListener('click', function() {
+            // 1. Fly back to the original center and zoom level
+            map.flyTo(defaultCenter, defaultZoom, { animate: true, duration: 1.5 });
+            
+            // 2. Close any open school popups
+            map.closePopup();
+            
+            // 3. Ensure the search box is empty
+            searchInput.value = '';
         });
 
         var nominatimUrl = "https://nominatim.openstreetmap.org/search.php?q=San+Juan+City,+Metro+Manila,+Philippines&polygon_geojson=1&format=json";
