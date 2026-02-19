@@ -34,13 +34,31 @@
         .leaflet-popup-content { margin: 16px; line-height: 1.5; }
         .popup-title { font-size: 1.1em; color: #1a73e8; margin-bottom: 4px; border-bottom: 1px solid #eee; padding-bottom: 4px; }
         
-        /* NEW: Styling specifically for the School ID to make it neat */
         .popup-id { font-size: 0.8em; color: #888; font-family: monospace; margin-bottom: 8px; }
-        
         .popup-address { font-size: 0.85em; color: #666; margin-bottom: 8px; }
-        .popup-programs { font-size: 0.9em; color: #555; }
+        .popup-programs { font-size: 0.9em; color: #555; margin-bottom: 12px; }
         .badge { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 0.8em; font-weight: 600; color: white; margin-bottom: 8px; }
         
+        /* NEW: Styling to turn our plain link into a nice-looking button */
+        .btn-directions {
+            display: inline-block;
+            width: 100%;
+            padding: 8px 0;
+            background-color: #1a73e8;
+            color: white !important; /* Forces the text to stay white */
+            text-decoration: none; /* Removes the underline */
+            border-radius: 6px;
+            font-size: 0.9em;
+            font-weight: 600;
+            text-align: center;
+            transition: background-color 0.2s;
+            box-sizing: border-box;
+        }
+        
+        .btn-directions:hover {
+            background-color: #1557b0; /* Darkens slightly when hovered over */
+        }
+
         .info.legend { background: white; padding: 10px 14px; font-size: 14px; line-height: 24px; color: #555; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
         .info.legend h4 { margin: 0 0 8px 0; color: #333; font-size: 15px; }
         .info.legend i { width: 24px; text-align: center; margin-right: 8px; font-size: 16px; }
@@ -67,9 +85,8 @@
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
 
-        // 1. Updated data array to include the specific School ID
         var schools = [
-            { id: "136750", name: "Nicanor C. Ibuna Elementary School", lat: 14.60176124, lng: 121.0303504, programs: "K-6 Basic Education", address: "61 J.P. Rizal St. Brgy. Onse, San Juan City" },
+           { id: "136750", name: "Nicanor C. Ibuna Elementary School", lat: 14.60176124, lng: 121.0303504, programs: "K-6 Basic Education", address: "61 J.P. Rizal St. Brgy. Onse, San Juan City" },
             { id: "136744", name: "Pedro Cruz Elementary School", lat: 14.60551065, lng: 121.0263512, programs: "K-6 Basic Education", address: "114 Lope K. Santos St. Brgy. Pedro Cruz, San Juan City" },
             { id: "136751", name: "Pinaglabanan Elementary School", lat: 14.60401922, lng: 121.0299103, programs: "K-6 Basic Education, SPED", address: "Pinaglabanan St. Brgy. Corazon de Jesus, San Juan City" },
             { id: "136747", name: "San Perfecto Elementary School", lat: 14.60304465, lng: 121.0231903, programs: "K-6 Basic Education", address: "San Gabriel cor. Adevoso St. Brgy. San Perfecto, San Juan City" },
@@ -102,13 +119,17 @@
             
             var marker = L.marker([school.lat, school.lng], { icon: customIcon }).addTo(map);
             
-            // 2. Inserted the new popup-id div right beneath the school title
+            // NEW: Appended the "Get Directions" link at the bottom of the popup content.
+            // Notice how it uses school.lat and school.lng to build the specific Google Maps URL.
             var popupContent = `
-                <div class='badge' style='background-color: ${schoolColor}'>School Information</div>
+                <div class='badge' style='background-color: ${schoolColor}'>School Info</div>
                 <div class='popup-title'><b>${school.name}</b></div>
                 <div class='popup-id'>School ID: ${school.id}</div>
                 <div class='popup-address'><i class="fa-solid fa-location-dot" style="color: #ea4335;"></i> ${school.address}</div>
                 <div class='popup-programs'><b>Programs:</b> ${school.programs}</div>
+                <a href="https://www.google.com/maps/dir/?api=1&destination=${school.lat},${school.lng}" target="_blank" class="btn-directions">
+                    <i class="fa-solid fa-route"></i> Get Directions
+                </a>
             `;
             
             marker.bindPopup(popupContent);
