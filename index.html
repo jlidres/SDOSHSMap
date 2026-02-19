@@ -21,56 +21,26 @@
             align-items: center;
         }
 
-        h2 {
-            color: #2c3e50;
-            margin-bottom: 20px;
-            text-align: center;
-        }
+        h2 { color: #2c3e50; margin-bottom: 20px; text-align: center; }
 
-        /* NEW: Styling for the Search Bar container and input */
-        .search-container {
-            width: 100%;
-            max-width: 900px;
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: center;
-        }
+        .search-container { width: 100%; max-width: 900px; margin-bottom: 15px; display: flex; justify-content: center; }
+        #schoolSearch { width: 100%; max-width: 400px; padding: 12px 20px; font-size: 16px; border: 1px solid #ccc; border-radius: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); font-family: 'Inter', sans-serif; outline: none; transition: border-color 0.3s; }
+        #schoolSearch:focus { border-color: #1a73e8; }
 
-        #schoolSearch {
-            width: 100%;
-            max-width: 400px;
-            padding: 12px 20px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 30px; /* Gives the search bar nice rounded pill-like edges */
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            font-family: 'Inter', sans-serif;
-            outline: none;
-            transition: border-color 0.3s;
-        }
-
-        #schoolSearch:focus {
-            border-color: #1a73e8; /* Highlights blue when clicked */
-        }
-
-        #schoolMap {
-            height: 550px;
-            width: 100%;
-            max-width: 900px; 
-            border: none;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.1); 
-            z-index: 1; /* Ensures the map stays behind standard dropdowns */
-        }
+        #schoolMap { height: 550px; width: 100%; max-width: 900px; border: none; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.1); z-index: 1; }
 
         .custom-school-icon { display: flex; justify-content: center; align-items: center; font-size: 24px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
         .leaflet-popup-content-wrapper { border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
         .leaflet-popup-content { margin: 16px; line-height: 1.5; }
-        .popup-title { font-size: 1.1em; color: #1a73e8; margin-bottom: 6px; border-bottom: 1px solid #eee; padding-bottom: 6px; }
+        .popup-title { font-size: 1.1em; color: #1a73e8; margin-bottom: 4px; border-bottom: 1px solid #eee; padding-bottom: 4px; }
+        
+        /* NEW: Styling specifically for the School ID to make it neat */
+        .popup-id { font-size: 0.8em; color: #888; font-family: monospace; margin-bottom: 8px; }
+        
+        .popup-address { font-size: 0.85em; color: #666; margin-bottom: 8px; }
         .popup-programs { font-size: 0.9em; color: #555; }
         .badge { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 0.8em; font-weight: 600; color: white; margin-bottom: 8px; }
         
-        /* Map Legend Styling */
         .info.legend { background: white; padding: 10px 14px; font-size: 14px; line-height: 24px; color: #555; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
         .info.legend h4 { margin: 0 0 8px 0; color: #333; font-size: 15px; }
         .info.legend i { width: 24px; text-align: center; margin-right: 8px; font-size: 16px; }
@@ -97,20 +67,21 @@
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
 
+        // 1. Updated data array to include the specific School ID
         var schools = [
-            { name: "Nicanor C. Ibuna Elementary School", lat: 14.60176124, lng: 121.0303504, programs: "K-6 Basic Education" },
-            { name: "Pedro Cruz Elementary School", lat: 14.60551065, lng: 121.0263512, programs: "K-6 Basic Education" },
-            { name: "Pinaglabanan Elementary School", lat: 14.60401922, lng: 121.0299103, programs: "K-6 Basic Education, SPED" },
-            { name: "San Perfecto Elementary School", lat: 14.60304465, lng: 121.0231903, programs: "K-6 Basic Education" },
-            { name: "Sta. Lucia Elementary School", lat: 14.59785905, lng: 121.0353281, programs: "K-6 Basic Education" },
-            { name: "West Crame Elementary School", lat: 14.60803024, lng: 121.0506251, programs: "K-6 Basic Education" },
-            { name: "Kabayanan Integrated School", lat: 14.59879668, lng: 121.0316739, programs: "K-10 Integrated Basic Ed." },
-            { name: "Salapan Integrated School", lat: 14.6113472, lng: 121.0244919, programs: "K-10 Integrated Basic Ed." },
-            { name: "San Juan City Integrated School", lat: 14.60613459, lng: 121.0228738, programs: "K-10 Integrated Basic Ed." },
-            { name: "San Juan National High School", lat: 14.60558314, lng: 121.0294749, programs: "Junior High (Grades 7-10)" },
-            { name: "San Juan City Science High School", lat: 14.60369204, lng: 121.0314835, programs: "Science Curriculum (JHS & SHS)" },
-            { name: "San Juan City Academic Senior High School", lat: 14.60699842, lng: 121.0225635, programs: "SHS Academic Tracks" },
-            { name: "San Juan City TVL Senior High School", lat: 14.60327769, lng: 121.0293973, programs: "SHS TVL Tracks" }
+            { id: "136750", name: "Nicanor C. Ibuna Elementary School", lat: 14.60176124, lng: 121.0303504, programs: "K-6 Basic Education", address: "61 J.P. Rizal St. Brgy. Onse, San Juan City" },
+            { id: "136744", name: "Pedro Cruz Elementary School", lat: 14.60551065, lng: 121.0263512, programs: "K-6 Basic Education", address: "114 Lope K. Santos St. Brgy. Pedro Cruz, San Juan City" },
+            { id: "136751", name: "Pinaglabanan Elementary School", lat: 14.60401922, lng: 121.0299103, programs: "K-6 Basic Education, SPED", address: "Pinaglabanan St. Brgy. Corazon de Jesus, San Juan City" },
+            { id: "136747", name: "San Perfecto Elementary School", lat: 14.60304465, lng: 121.0231903, programs: "K-6 Basic Education", address: "San Gabriel cor. Adevoso St. Brgy. San Perfecto, San Juan City" },
+            { id: "136752", name: "Sta. Lucia Elementary School", lat: 14.59785905, lng: 121.0353281, programs: "K-6 Basic Education", address: "7-D Vicencio St. Brgy. Sta. Lucia, San Juan City" },
+            { id: "137077", name: "West Crame Elementary School", lat: 14.60803024, lng: 121.0506251, programs: "K-6 Basic Education", address: "21 1st West Crame Street, Brgy. West Crame, San Juan City" },
+            { id: "502655", name: "Kabayanan Integrated School", lat: 14.59879668, lng: 121.0316739, programs: "K-10 Integrated Basic Ed.", address: "201-I Francisco St. Brgy. Kabayanan, San Juan City" },
+            { id: "502654", name: "Salapan Integrated School", lat: 14.6113472, lng: 121.0244919, programs: "K-10 Integrated Basic Ed.", address: "11-S Veloso St. Brgy. Salapan, San Juan City" },
+            { id: "502653", name: "San Juan City Integrated School", lat: 14.60613459, lng: 121.0228738, programs: "K-10 Integrated Basic Ed.", address: "N. Domingo cor. A. Luna St. Brgy. Balong-Bato, San Juan City" },
+            { id: "305423", name: "San Juan National High School", lat: 14.60558314, lng: 121.0294749, programs: "Junior - Senior High School (Grades 7-12)", address: "P. Narciso St. Brgy. Corazon de Jesus, San Juan City" },
+            { id: "305607", name: "San Juan City Science High School", lat: 14.60369204, lng: 121.0314835, programs: "Science Curriculum (JHS & SHS)", address: "29 Pinaglabanan St. Brgy. St. Joseph, San Juan City" },
+            { id: "305608", name: "San Juan City Academic Senior High School", lat: 14.60699842, lng: 121.0225635, programs: "SHS Academic Tracks", address: "N. Domingo cor. A. Luna St. Brgy. Balong-Bato, San Juan City" },
+            { id: "305607", name: "San Juan City TVL Senior High School", lat: 14.60327769, lng: 121.0293973, programs: "SHS TVL Tracks", address: "Dr. A. Ejercito cor Jose Gil Street Brgy. Tibagan, San Juan City" }
         ];
 
         function getSchoolColor(name) {
@@ -120,7 +91,6 @@
             return "#FBBC05"; 
         }
 
-        // Target our HTML elements for the search functionality
         var datalist = document.getElementById('school-options');
         var searchInput = document.getElementById('schoolSearch');
 
@@ -128,61 +98,39 @@
             var schoolColor = getSchoolColor(school.name);
             
             var iconHtml = `<i class="fa-solid fa-school" style="color: ${schoolColor};"></i>`;
-            var customIcon = L.divIcon({
-                html: iconHtml,
-                className: 'custom-school-icon',
-                iconSize: [30, 30], 
-                iconAnchor: [15, 15], 
-                popupAnchor: [0, -15] 
-            });
+            var customIcon = L.divIcon({ html: iconHtml, className: 'custom-school-icon', iconSize: [30, 30], iconAnchor: [15, 15], popupAnchor: [0, -15] });
             
             var marker = L.marker([school.lat, school.lng], { icon: customIcon }).addTo(map);
             
+            // 2. Inserted the new popup-id div right beneath the school title
             var popupContent = `
-                <div class='badge' style='background-color: ${schoolColor}'>School Info</div>
+                <div class='badge' style='background-color: ${schoolColor}'>School Information</div>
                 <div class='popup-title'><b>${school.name}</b></div>
+                <div class='popup-id'>School ID: ${school.id}</div>
+                <div class='popup-address'><i class="fa-solid fa-location-dot" style="color: #ea4335;"></i> ${school.address}</div>
                 <div class='popup-programs'><b>Programs:</b> ${school.programs}</div>
             `;
             
             marker.bindPopup(popupContent);
-
-            // NEW 1: Store a reference to this specific marker inside our school object 
-            // so we can access it later during the search
             school.marker = marker;
 
-            // NEW 2: Add this school's name to the HTML datalist for autocomplete
             var option = document.createElement('option');
             option.value = school.name;
             datalist.appendChild(option);
         });
 
-        // NEW 3: Listen for when the user types or selects an option in the search box
         searchInput.addEventListener('input', function(e) {
             var typedText = e.target.value;
-            
-            // Search through our array to see if the typed text matches a school name exactly
-            var matchedSchool = schools.find(function(s) {
-                return s.name === typedText;
-            });
+            var matchedSchool = schools.find(function(s) { return s.name === typedText; });
 
-            // If we found a match...
             if (matchedSchool) {
-                // Fly smoothly to those coordinates, and zoom in closely (zoom level 18)
-                map.flyTo([matchedSchool.lat, matchedSchool.lng], 18, {
-                    animate: true,
-                    duration: 1.5 // Takes 1.5 seconds to glide over
-                });
-                
-                // Automatically open the popup for that school
+                map.flyTo([matchedSchool.lat, matchedSchool.lng], 18, { animate: true, duration: 1.5 });
                 matchedSchool.marker.openPopup();
-                
-                // Clear the search box so it's ready for next time
                 searchInput.value = '';
-                searchInput.blur(); // Removes the cursor focus from the search box
+                searchInput.blur();
             }
         });
 
-        // Fetch and draw the San Juan City Border
         var nominatimUrl = "https://nominatim.openstreetmap.org/search.php?q=San+Juan+City,+Metro+Manila,+Philippines&polygon_geojson=1&format=json";
         
         fetch(nominatimUrl)
@@ -190,13 +138,10 @@
             .then(function(data) {
                 if (data && data.length > 0) {
                     var cityBoundary = data[0].geojson;
-                    L.geoJSON(cityBoundary, {
-                        style: { color: "#2c3e50", weight: 3, opacity: 0.7, fillOpacity: 0.05, dashArray: '8, 6' }
-                    }).addTo(map);
+                    L.geoJSON(cityBoundary, { style: { color: "#2c3e50", weight: 3, opacity: 0.7, fillOpacity: 0.05, dashArray: '8, 6' } }).addTo(map);
                 }
             });
 
-        // Create the Map Legend
         var legend = L.control({ position: 'bottomright' });
         legend.onAdd = function (map) {
             var div = L.DomUtil.create('div', 'info legend');
